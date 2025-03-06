@@ -1,0 +1,121 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using BlazorApp.Models
+@inject BlazorApp.Services.TodoService TodoService
+
+<h3>Todo List</h3>
+
+
+<ul>
+    @foreach (var todo in todos)
+    {
+        <li>
+            @todo.Task (@(todo.IsCompleted ? "Done" : "Pending"))
+            <button @onclick="() => DeleteTodo(todo.Id)">Delete</button>
+            <button @onclick="() => ToggleCompletion(todo)">Toggle Status</button>
+            <button @onclick="() => EditTodo(todo)">Edit</button> <!-- Edit button -->
+        </li>
+    }
+</ul>
+
+
+<button @onclick="ShowCreateForm">Add New Todo</button>
+
+@if (isCreateFormVisible)
+{
+    <div>
+        <input @bind="newTodo.Task" placeholder="Enter Task" />
+        <button @onclick="CreateTodo">Create Todo</button>
+        <button @onclick="HideCreateForm">Cancel</button>
+    </div>
+}
+
+<!-- Edit Todo Form -->
+@if (isEditFormVisible)
+{
+    <div>
+        <input @bind="editingTodo.Task" placeholder="Edit Task" />
+        <button @onclick="SaveEdit">Save</button>
+        <button @onclick="CancelEdit">Cancel</button>
+    </div>
+}
+
+@code {
+    private List<Todo> todos = new();
+    private bool isCreateFormVisible = false;
+    private bool isEditFormVisible = false;
+    private Todo newTodo = new Todo();
+    private Todo editingTodo = new Todo();
+
+        protected override async Task OnInitializedAsync()
+    {
+        todos = await TodoService.GetTodosAsync();
+    }
+
+   
+    private void ShowCreateForm()
+    {
+        isCreateFormVisible = true;
+        isEditFormVisible = false;
+    }
+
+    // Hide the create form
+    private void HideCreateForm()
+    {
+        isCreateFormVisible = false;
+    }
+
+    // Create a new todo
+    private async Task CreateTodo()
+    {
+        if (!string.IsNullOrEmpty(newTodo.Task))
+        {
+            await TodoService.CreateTodoAsync(newTodo);
+            todos = await TodoService.GetTodosAsync(); 
+            newTodo = new Todo(); 
+            isCreateFormVisible = false; 
+        }
+    }
+
+    // Delete a todo by its id
+    private async Task DeleteTodo(string id)
+    {
+        await TodoService.DeleteTodoAsync(id);
+        todos = await TodoService.GetTodosAsync(); 
+    }
+
+    
+    private async Task ToggleCompletion(Todo todo)
+    {
+        todo.IsCompleted = !todo.IsCompleted;
+        await TodoService.UpdateTodoAsync(todo.Id, todo);
+        todos = await TodoService.GetTodosAsync(); 
+    }
+
+    // Show the form to edit a todo
+    private void EditTodo(Todo todo)
+    {
+        editingTodo = new Todo
+        {
+            Id = todo.Id,
+            Task = todo.Task,
+            IsCompleted = todo.IsCompleted
+        };
+        isEditFormVisible = true;
+        isCreateFormVisible = false;
+    }
+
+    // Save the edited todo
+    private async Task SaveEdit()
+    {
+        await TodoService.UpdateTodoAsync(editingTodo.Id, editingTodo);
+        todos = await TodoService.GetTodosAsync(); // Refresh the list
+        isEditFormVisible = false; // Hide the form
+    }
+
+    // Cancel the edit
+    private void CancelEdit()
+    {
+        isEditFormVisible = false;
+    }
+}

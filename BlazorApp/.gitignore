@@ -1,0 +1,42 @@
+# .NET build output
+/bin/
+/obj/
+
+/# ASP.NET temporary files
+.vscode/
+.idea/
+.vs/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# User secrets
+secrets.json
+
+# npm modules for Blazor WebAssembly (if any)
+node_modules/
+
+# Published files for .NET Blazor
+wwwroot/_published/
+
+# ASP.NET Core logs
+logs/
+
+# JetBrains Rider, Visual Studio Code or VS/IntelliJ IDEA
+.idea/
+
+# JetBrains Rider specific files
+.idea/.idea/*
+
+
+
+# Windows system files
+Thumbs.db
+
+# VS Code directories
+.vscode/
+
+

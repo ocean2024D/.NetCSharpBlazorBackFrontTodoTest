@@ -1,0 +1,42 @@
+# .NET build output
+/bin/
+/obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# User secrets
+secrets.json
+
+# ASP.NET Core logs
+logs/
+
+# Published files
+publish/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+
+
+# Windows system files
+Thumbs.db
+
+# ASP.NET Core appsettings and environment-specific files
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Staging.json
+appsettings.Local.json
+
+# Visual Studio Code directories
+.vscode/
+
+# JetBrains Rider specific files
+.idea/
+appsettings.*.json
